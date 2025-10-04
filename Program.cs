@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Raylib_cs;
+using Scene;
 
 namespace naive_pathtracer;
 
@@ -17,6 +18,27 @@ public class Program
         camera.Target = new Vector3(0, 0, 0);
         camera.Projection = CameraProjection.Perspective;
 
+        SceneObject[] objects = [
+            new SceneObject {
+                Type = ShapeType.Cube,
+                Position = new Vector3(-2, 1, 1),
+                Size = new Vector3(1, 2, 1),
+                Color = Color.Red
+            },
+            new SceneObject {
+                Type = ShapeType.Sphere,
+                Position = new Vector3(1, 0.5f, 5),
+                Radius = 1f,
+                Color = Color.Blue
+            },
+            new SceneObject {
+                Type = ShapeType.Plane,
+                Position = new Vector3(0, 0, 0),
+                PlaneSize = new Vector2(50, 50),
+                Color = Color.RayWhite
+            }
+        ];
+
         while (!Raylib.WindowShouldClose())
         {
             Raylib.BeginDrawing();
@@ -24,11 +46,15 @@ public class Program
 
             Raylib.BeginMode3D(camera);
 
-            Raylib.DrawCube(new Vector3(-2, 1, 1), 1, 2, 1, Color.Red);
-            Raylib.DrawSphere(new Vector3(1, 0.5f, 5), 1, Color.Blue);
-            Raylib.DrawPlane(new Vector3(0, 0, 0), new Vector2(50, 50), Color.RayWhite);
+            foreach (var obj in objects)
+            {
+                obj.Draw();
+            }
 
             Raylib.EndMode3D();
+
+            Raylib.DrawFPS(25, 25);
+
             Raylib.EndDrawing();
         }
 
