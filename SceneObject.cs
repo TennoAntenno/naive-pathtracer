@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Scene;
 
-enum ShapeType
+public enum ShapeType
 {
     Cube,
     Sphere,
@@ -11,7 +11,7 @@ enum ShapeType
     Mesh
 }
 
-struct SceneObject {
+public struct SceneObject {
     public ShapeType Type;
     public Vector3 Position;
     public Vector3 Size; // cubes
