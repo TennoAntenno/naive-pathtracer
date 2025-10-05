@@ -11,8 +11,10 @@ public struct RaySceneCollision
     public Vector3 Point;
     public Vector3 Normal;
 
-    public static RayCollision GetCollision(Ray ray, SceneObject obj) {
-        switch (obj.Type) {
+    public static RayCollision GetCollision(Ray ray, SceneObject obj)
+    {
+        switch (obj.Type)
+        {
             case ShapeType.Cube:
                 BoundingBox bounds = new BoundingBox(
                     obj.Position - obj.Size / 2,

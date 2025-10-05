@@ -52,6 +52,9 @@ public class Program
             Raylib.GenImageColor(scaledWidth, scaledHeight, Color.Black)
         );
 
+        List<RayCollision> normals = new List<RayCollision>();
+        List<Ray> bounces = new List<Ray>();
+
         for (int y = 0; y < scaledHeight; y++)
         {
             for (int x = 0; x < scaledWidth; x++)
@@ -70,6 +73,19 @@ public class Program
                     {
                         closest = col.Distance;
                         hitColor = obj.Color;
+
+                        if (x % 10 == 0 && y % 10 == 0)
+                        {
+                            if (obj.Type == ShapeType.Plane)
+                                break;
+                            normals.Add(col);
+
+                            Vector3 direction = Vector3.Reflect(col.Point - camera.Position, col.Normal);
+                            Ray bounce = new Ray();
+                            bounce.Position = col.Point;
+                            bounce.Direction = direction;
+                            bounces.Add(bounce);
+                        }
                     }
                 }
 
@@ -82,10 +98,26 @@ public class Program
 
         while (!Raylib.WindowShouldClose())
         {
+
             Raylib.BeginDrawing();
             Raylib.ClearBackground(Color.SkyBlue);
 
+            Rectangle src = new Rectangle(0, 0, scaledWidth, scaledHeight);
+            Rectangle dest = new Rectangle(0, 0, screenWidth, screenHeight);
+            // Raylib.DrawTexturePro(texture, src, dest, Vector2.Zero, 0, Color.White);
+
             Raylib.BeginMode3D(camera);
+
+            Raylib.UpdateCamera(ref camera, CameraMode.Free);
+
+            foreach (RayCollision normal in normals)
+            {
+                Raylib.DrawLine3D(normal.Point, normal.Point + (normal.Normal * 1f), Color.Green);
+            }
+            foreach (Ray bounce in bounces)
+            {
+                Raylib.DrawRay(bounce, Color.Purple);
+            }
 
             foreach (var obj in objects)
             {
@@ -93,10 +125,6 @@ public class Program
             }
 
             Raylib.EndMode3D();
-
-            Rectangle src = new Rectangle(0, 0, scaledWidth, scaledHeight);
-            Rectangle dest = new Rectangle(0, 0, screenWidth, screenHeight);
-            Raylib.DrawTexturePro(texture, src, dest, Vector2.Zero, 0, Color.White);
 
             Raylib.DrawFPS(25, 25);
 
